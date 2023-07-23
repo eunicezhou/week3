@@ -31,17 +31,16 @@ with open("attraction.csv",mode="w",encoding="utf-8",newline="") as file:
         writer.writerow([stitle,area,longitude,latitude,first_image])
 
 with open("mrt.csv",mode="w",encoding='utf-8',newline="") as profile:
-    writer = csv.DictWriter(profile,['view_gallery[key]','view_gallery[value]'])
+    writer = csv.writer(profile)
     view_gallery = {}
     for station in range(len(situation)):
-        mrt = str(situation[station]["MRT"])
-        view = str(situation[station]["stitle"])
-
+        mrt = situation[station]["MRT"]
+        view = situation[station]["stitle"]
         if mrt in view_gallery:
-            view_gallery[mrt] = f"{view_gallery[mrt]},{view}"
+            view_gallery[mrt].append(view)
         else:
-            view_gallery[mrt] = f"{view}"
-    view = list(view.split())
-    writer.writeheader()
-    for mrt, view in view_gallery.items():
-        writer.writerow({'view_gallery[key]': f'{mrt}','view_gallery[value]': f'{view}'})
+            view_gallery[mrt] = [mrt]
+            view_gallery[mrt].append(view)
+        view = list(view.split())
+    for item in view_gallery:
+        writer.writerow(view_gallery[item])
